@@ -1,52 +1,60 @@
-// Initialiser Scrollama
 const scroller = scrollama();
 
-// Find elementer
-const introSection = document.getElementById('intro');
-const scrollyContainer = document.getElementById('scrolly-container');
 const choices = document.querySelectorAll('.choice');
+const scrollPrompt = document.getElementById('scroll-prompt');
+const scrollyContainer = document.getElementById('scrolly-container');
 const charSprite = document.getElementById('character-sprite');
 
-// Funktion der starter historien
+let currentMode = "";
+
+// Håndter valg af path
 choices.forEach(choice => {
     choice.addEventListener('click', () => {
-        const perspective = choice.getAttribute('data-perspective');
-        startStory(perspective);
+        currentMode = choice.getAttribute('data-perspective');
+
+        // Visuel feedback på klik
+        choices.forEach(c => c.classList.add('fade-out'));
+        choice.classList.remove('fade-out');
+        choice.classList.add('selected-shake');
+
+        // Vis scroll pil
+        scrollPrompt.classList.remove('hidden');
+
+        // Gør klar til at vise historien
+        prepareStory(currentMode);
     });
 });
 
-function startStory(mode) {
-    // 1. Skjul intro og vis scrollytelling
-    introSection.classList.add('hidden');
-    scrollyContainer.classList.remove('hidden');
-
-    // 2. Indsæt den rigtige karakter i det "sticky" felt
-    // Her bruger vi den neutrale version som start
+function prepareStory(mode) {
+    // Sæt den neutrale karakter ind i den sticky sektion
     charSprite.innerHTML = `<img src="${mode}_neutral.svg" alt="${mode}">`;
 
-    // 3. Rul automatisk til toppen af den nye sektion
-    window.scrollTo(0, 0);
-
-    // 4. Setup Scrollama (vi fortæller den hvilke 'steps' den skal kigge efter)
-    setupScroller(mode);
+    // Lyt efter scroll for at afsløre indholdet
+    window.addEventListener('scroll', function reveal() {
+        if (window.scrollY > 100) {
+            scrollyContainer.classList.remove('hidden');
+            window.removeEventListener('scroll', reveal);
+            
+            // Start Scrollama når indholdet er synligt
+            initScrollama();
+        }
+    });
 }
 
-function setupScroller(mode) {
+function initScrollama() {
     scroller
         .setup({
             step: ".step",
-            offset: 0.5,
+            offset: 0.6,
             debug: false
         })
         .onStepEnter(response => {
-            // Her kan vi ændre karakterens udtryk eller talebobler
-            // baseret på hvilket 'step' vi er nået til
-            console.log("Enter step:", response.index, "for", mode);
+            // Tilføj 'is-active' klasse til det nuværende step
+            response.element.classList.add("is-active");
             
-            // Eksempel: Hvis vi er i step 2, skift til 'surprised'
-            // charSprite.innerHTML = `<img src="${mode}_surprised.svg">`;
+            // Her kan vi senere tilføje kode til at skifte karakterens ansigtsudtryk
+            console.log("Step", response.index, "entered");
         });
 }
 
-// Sørg for at scrolleren genberegner størrelser hvis man ændrer vinduet
 window.addEventListener("resize", scroller.resize);

@@ -39,11 +39,18 @@
                 <span>Driver</span>
             </div>
         </div>
+
+        <div id="scroll-prompt" class="hidden">
+            <p>Scroll to start the story</p>
+            <div class="arrow">↓</div>
+        </div>
     </section>
 
     <main id="scrolly-container" class="hidden">
+        
         <div class="sticky-graphic">
             <div id="character-sprite"></div>
+            
             <div id="plot-placeholder">
                 <p>Visualization Loading...</p>
             </div>
@@ -51,10 +58,15 @@
 
         <article class="scroll-text">
             <div class="step" data-step="1">
-                <h3 id="dynamic-title">Dangerous Intersections</h3>
-                <p id="dynamic-text">Loading perspective...</p>
+                <h3>Dangerous Intersections</h3>
+                <p>Manhattan remains a hotspot for collisions. By looking at high-density areas, we can identify where the city's infrastructure fails its most vulnerable users.</p>
             </div>
-            </article>
+            <div class="step" data-step="2">
+                <h3>The Factor of Time</h3>
+                <p>As the sun sets, the patterns of danger shift. Nighttime visibility and fatigue become the leading contributing factors.</p>
+            </div>
+        </article>
+
     </main>
 
     <script src="https://unpkg.com/scrollama"></script>

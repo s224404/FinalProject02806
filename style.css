@@ -1,11 +1,23 @@
-/* General Style */
-body {
-    margin: 0;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #F0EBE3; /* Your beige palette */
-    color: #161517; /* Dark from your palette */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Space+Mono&family=Public+Sans:wght@300;400;700&display=swap');
+
+:root {
+    --bg-color: #f9f7f2;
+    --text-color: #1a1a1a;
+    --accent-color: #ff4d4d;
+    --font-header: 'Space Grotesk', sans-serif;
+    --font-body: 'Public Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
 }
 
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* Intro Sektion */
 #intro {
     height: 100vh;
     display: flex;
@@ -13,110 +25,128 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    transition: opacity 0.5s;
 }
 
-/* Scrollytelling Setup */
-#scrolly-container {
-    position: relative;
-    display: flex;
-    background-color: #E1D4B7; /* Slightly darker beige */
+#intro h1 {
+    font-family: var(--font-header);
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
 
-/* The Fixed Graphic (The Plots) */
-.sticky-graphic {
-    position: sticky;
-    top: 5vh;
-    width: 50%;
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff; /* White for the plot area */
-    margin: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-/* The Scrolling Text */
-.scroll-text {
-    width: 50%;
-    padding: 0 5vw;
-}
-
-.step {
-    margin-bottom: 80vh; /* Spaces out the text blocks */
-    background: rgba(240, 235, 227, 0.9);
-    padding: 20px;
-    border-radius: 4px;
-    border-left: 5px solid #3D7385; /* Teal accent */
-}
-
-.step h3 {
-    margin-top: 0;
-}
-
+/* Choice Container & Hover */
 #choice-container {
     display: flex;
-    justify-content: center;
-    gap: 50px;
-    margin-top: 50px;
+    gap: 60px;
+    margin-top: 40px;
 }
 
 .choice {
     cursor: pointer;
     text-align: center;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
 }
 
-.choice:hover {
-    transform: translateY(-10px);
-}
-
-.choice span {
-    display: block;
-    margin-top: 15px;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-/* Image Swap Logik */
 .image-stack {
     position: relative;
-    width: 150px; /* Juster størrelsen her */
-    height: 150px;
+    width: 180px;
+    height: 180px;
 }
 
 .image-stack img {
     width: 100%;
-    height: auto;
     position: absolute;
     top: 0;
     left: 0;
 }
 
-.img-hover {
-    display: none; /* Skjul den animerede version som standard */
+.img-hover { opacity: 0; }
+.choice:hover .img-static { opacity: 0; }
+.choice:hover .img-hover { opacity: 1; }
+
+.choice span {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-weight: bold;
 }
 
-.choice:hover .img-static {
-    display: none; /* Skjul den stille når vi hover */
+/* Animationer ved klik */
+.fade-out {
+    opacity: 0.2;
+    filter: grayscale(1);
+    pointer-events: none;
 }
 
-.choice:hover .img-hover {
-    display: block; /* Vis den animerede ved hover */
+.selected-shake {
+    animation: shake 0.6s ease-in-out;
+    transform: scale(1.2);
 }
 
-/* Skjul scrollytelling indtil valg er truffet */
-.hidden {
-    display: none !important;
+@keyframes shake {
+    0%, 100% { transform: scale(1.2) rotate(0); }
+    20% { transform: scale(1.2) rotate(-5deg); }
+    40% { transform: scale(1.2) rotate(5deg); }
+    60% { transform: scale(1.2) rotate(-3deg); }
+    80% { transform: scale(1.2) rotate(3deg); }
 }
 
-/* Karakteren i selve historien */
+/* Scroll Prompt */
+#scroll-prompt {
+    margin-top: 50px;
+    font-family: var(--font-mono);
+}
+
+.arrow {
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
+/* Scrollytelling Layout */
+#scrolly-container {
+    display: flex;
+    position: relative;
+}
+
+.sticky-graphic {
+    position: sticky;
+    top: 0;
+    width: 60%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #character-sprite {
     position: absolute;
     bottom: 10%;
     left: 10%;
-    width: 120px;
+    width: 280px; /* Her styrer vi din karakters størrelse i historien */
     z-index: 10;
 }
+
+#character-sprite img {
+    width: 100%;
+}
+
+.scroll-text {
+    width: 40%;
+    padding-right: 5%;
+}
+
+.step {
+    margin-bottom: 90vh;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    border-left: 4px solid var(--accent-color);
+}
+
+.hidden { display: none !important; }
