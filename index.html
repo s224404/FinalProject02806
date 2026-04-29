@@ -10,18 +10,40 @@
 
     <section id="intro">
         <h1>NYC Traffic Collisions</h1>
-        <p>A data-driven story about danger, urban planning, and human lives.</p>
+        <p class="subtitle">A data-driven story about danger, urban planning, and human lives.</p>
+        
         <p>Choose your perspective to begin:</p>
+        
         <div id="choice-container">
-            <button>Pedestrian</button>
-            <button>Cyclist</button>
-            <button>Driver</button>
+            <div class="choice" data-perspective="cyclist">
+                <div class="image-stack">
+                    <img src="cyclist_neutral.svg" class="img-static" alt="Cyclist">
+                    <img src="cyclist_neutral_moving_in_place.svg" class="img-hover" alt="Cyclist moving">
+                </div>
+                <span>Cyclist</span>
+            </div>
+
+            <div class="choice" data-perspective="pedestrian">
+                <div class="image-stack">
+                    <img src="pedestrian_neutral.svg" class="img-static" alt="Pedestrian">
+                    <img src="pedestrian_neutral_walking_in_place.svg" class="img-hover" alt="Pedestrian moving">
+                </div>
+                <span>Pedestrian</span>
+            </div>
+
+            <div class="choice" data-perspective="driver">
+                <div class="image-stack">
+                    <img src="driver_neutral.svg" class="img-static" alt="Driver">
+                    <img src="driver_neutral_idle_in_place.svg" class="img-hover" alt="Driver moving">
+                </div>
+                <span>Driver</span>
+            </div>
         </div>
     </section>
 
-    <main id="scrolly-container">
-        
+    <main id="scrolly-container" class="hidden">
         <div class="sticky-graphic">
+            <div id="character-sprite"></div>
             <div id="plot-placeholder">
                 <p>Visualization Loading...</p>
             </div>
@@ -29,15 +51,10 @@
 
         <article class="scroll-text">
             <div class="step" data-step="1">
-                <h3>Dangerous Intersections</h3>
-                <p>Manhattan remains a hotspot for collisions. By looking at high-density areas, we can identify where the city's infrastructure fails its most vulnerable users.</p>
+                <h3 id="dynamic-title">Dangerous Intersections</h3>
+                <p id="dynamic-text">Loading perspective...</p>
             </div>
-            <div class="step" data-step="2">
-                <h3>The Factor of Time</h3>
-                <p>As the sun sets, the patterns of danger shift. Nighttime visibility and fatigue become the leading contributing factors.</p>
-            </div>
-        </article>
-
+            </article>
     </main>
 
     <script src="https://unpkg.com/scrollama"></script>

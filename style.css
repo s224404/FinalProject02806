@@ -54,3 +54,69 @@ body {
 .step h3 {
     margin-top: 0;
 }
+
+#choice-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 50px;
+}
+
+.choice {
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.choice:hover {
+    transform: translateY(-10px);
+}
+
+.choice span {
+    display: block;
+    margin-top: 15px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Image Swap Logik */
+.image-stack {
+    position: relative;
+    width: 150px; /* Juster størrelsen her */
+    height: 150px;
+}
+
+.image-stack img {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.img-hover {
+    display: none; /* Skjul den animerede version som standard */
+}
+
+.choice:hover .img-static {
+    display: none; /* Skjul den stille når vi hover */
+}
+
+.choice:hover .img-hover {
+    display: block; /* Vis den animerede ved hover */
+}
+
+/* Skjul scrollytelling indtil valg er truffet */
+.hidden {
+    display: none !important;
+}
+
+/* Karakteren i selve historien */
+#character-sprite {
+    position: absolute;
+    bottom: 10%;
+    left: 10%;
+    width: 120px;
+    z-index: 10;
+}
