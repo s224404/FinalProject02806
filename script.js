@@ -2,41 +2,48 @@ const scroller = scrollama();
 
 const choices = document.querySelectorAll('.choice');
 const scrollPrompt = document.getElementById('scroll-prompt');
+const storyHook = document.getElementById('story-hook');
 const scrollyContainer = document.getElementById('scrolly-container');
-const charSprite = document.getElementById('character-sprite');
+
+const plotFrame = document.getElementById('plot-frame');
+const happyCharImg = document.getElementById('happy-char-img');
+const hookTitle = document.getElementById('hook-title');
 
 let currentMode = "";
 
-// Håndter valg af path
 choices.forEach(choice => {
     choice.addEventListener('click', () => {
         currentMode = choice.getAttribute('data-perspective');
 
-        // Visuel feedback på klik
         choices.forEach(c => c.classList.add('fade-out'));
         choice.classList.remove('fade-out');
         choice.classList.add('selected-shake');
 
-        // Vis scroll pil
         scrollPrompt.classList.remove('hidden');
 
-        // Gør klar til at vise historien
-        prepareStory(currentMode);
+        prepareContent(currentMode);
     });
 });
 
-function prepareStory(mode) {
-    // Sæt den neutrale karakter ind i den sticky sektion
-    charSprite.innerHTML = `<img src="${mode}_neutral.svg" alt="${mode}">`;
+function prepareContent(mode) {
+    // 1. Indlæs plottet (motorist_hourly_plot.html virker nu direkte)
+    plotFrame.src = `${mode}_hourly_plot.html`;
 
-    // Lyt efter scroll for at afsløre indholdet
-    window.addEventListener('scroll', function reveal() {
+    // 2. Sæt den glade karakter ind til højre
+    // HVIS dine filer stadig hedder 'driver_happy.svg', lader vi den kigge efter det
+    let imgName = mode === "motorist" ? "driver" : mode;
+    happyCharImg.src = `${imgName}_happy.svg`;
+
+    // 3. Opdater hook-teksten
+    hookTitle.innerText = `The streets of NYC from a ${mode}'s perspective...`;
+
+    // 4. Vis sektionerne ved scroll
+    window.addEventListener('scroll', function revealSections() {
         if (window.scrollY > 100) {
+            storyHook.classList.remove('hidden');
             scrollyContainer.classList.remove('hidden');
-            window.removeEventListener('scroll', reveal);
-            
-            // Start Scrollama når indholdet er synligt
             initScrollama();
+            window.removeEventListener('scroll', revealSections);
         }
     });
 }
@@ -45,15 +52,12 @@ function initScrollama() {
     scroller
         .setup({
             step: ".step",
-            offset: 0.6,
+            offset: 0.7,
             debug: false
         })
         .onStepEnter(response => {
-            // Tilføj 'is-active' klasse til det nuværende step
             response.element.classList.add("is-active");
-            
-            // Her kan vi senere tilføje kode til at skifte karakterens ansigtsudtryk
-            console.log("Step", response.index, "entered");
+            console.log("Entering step:", response.index);
         });
 }
 
