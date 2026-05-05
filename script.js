@@ -15,37 +15,34 @@ choices.forEach(choice => {
     choice.addEventListener('click', () => {
         currentMode = choice.getAttribute('data-perspective');
 
+        // 1. Feedback på klik
         choices.forEach(c => c.classList.add('fade-out'));
         choice.classList.remove('fade-out');
         choice.classList.add('selected-shake');
 
+        // 2. Fjern hidden klasser med det samme
+        storyHook.classList.remove('hidden');
+        scrollyContainer.classList.remove('hidden');
         scrollPrompt.classList.remove('hidden');
 
+        // 3. Forbered indholdet
         prepareContent(currentMode);
+        
+        // 4. Start Scrollama
+        initScrollama();
     });
 });
 
 function prepareContent(mode) {
-    // 1. Indlæs plottet (motorist_hourly_plot.html virker nu direkte)
+    // Sæt plottet (motorist_hourly_plot.html findes i din liste)
     plotFrame.src = `${mode}_hourly_plot.html`;
 
-    // 2. Sæt den glade karakter ind til højre
-    // HVIS dine filer stadig hedder 'driver_happy.svg', lader vi den kigge efter det
-    let imgName = mode === "motorist" ? "driver" : mode;
-    happyCharImg.src = `${imgName}_happy.svg`;
+    // Sæt karakteren (hvis det er motorist, skal vi bruge driver filen)
+    let filePrefix = mode === "motorist" ? "driver" : mode;
+    happyCharImg.src = `${filePrefix}_happy.svg`;
 
-    // 3. Opdater hook-teksten
+    // Opdater overskrift i hook
     hookTitle.innerText = `The streets of NYC from a ${mode}'s perspective...`;
-
-    // 4. Vis sektionerne ved scroll
-    window.addEventListener('scroll', function revealSections() {
-        if (window.scrollY > 100) {
-            storyHook.classList.remove('hidden');
-            scrollyContainer.classList.remove('hidden');
-            initScrollama();
-            window.removeEventListener('scroll', revealSections);
-        }
-    });
 }
 
 function initScrollama() {
@@ -57,7 +54,7 @@ function initScrollama() {
         })
         .onStepEnter(response => {
             response.element.classList.add("is-active");
-            console.log("Entering step:", response.index);
+            console.log("Enter:", response.index);
         });
 }
 
