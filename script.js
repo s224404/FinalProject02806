@@ -1,61 +1,53 @@
 const scroller = scrollama();
-
 const choices = document.querySelectorAll('.choice');
-const scrollPrompt = document.getElementById('scroll-prompt');
-const storyHook = document.getElementById('story-hook');
-const scrollyContainer = document.getElementById('scrolly-container');
-
-const plotFrame = document.getElementById('plot-frame');
-const happyCharImg = document.getElementById('happy-char-img');
-const hookTitle = document.getElementById('hook-title');
-
-let currentMode = "";
+const sections = document.querySelectorAll('.fade-section');
+const charContainer = document.getElementById('dynamic-character');
 
 choices.forEach(choice => {
     choice.addEventListener('click', () => {
-        currentMode = choice.getAttribute('data-perspective');
-
-        // 1. Feedback på klik
-        choices.forEach(c => c.classList.add('fade-out'));
-        choice.classList.remove('fade-out');
-        choice.classList.add('selected-shake');
-
-        // 2. Fjern hidden klasser med det samme
-        storyHook.classList.remove('hidden');
-        scrollyContainer.classList.remove('hidden');
-        scrollPrompt.classList.remove('hidden');
-
-        // 3. Forbered indholdet
-        prepareContent(currentMode);
+        const mode = choice.getAttribute('data-perspective');
         
-        // 4. Start Scrollama
+        // 1. Gør karakteren klar
+        let filePrefix = mode === "motorist" ? "driver" : mode;
+        document.getElementById('happy-char-img').src = `${filePrefix}_happy.svg`;
+        
+        // 2. Vis næste sektioner og start fade
+        document.getElementById('story-hook').classList.remove('hidden');
+        document.getElementById('scrolly-container').classList.remove('hidden');
+        document.getElementById('scroll-prompt').classList.remove('hidden');
+        
+        // 3. Setup Plotly
+        document.getElementById('plot-frame').src = `${mode}_hourly_plot.html`;
+
         initScrollama();
     });
 });
-
-function prepareContent(mode) {
-    // Sæt plottet (motorist_hourly_plot.html findes i din liste)
-    plotFrame.src = `${mode}_hourly_plot.html`;
-
-    // Sæt karakteren (hvis det er motorist, skal vi bruge driver filen)
-    let filePrefix = mode === "motorist" ? "driver" : mode;
-    happyCharImg.src = `${filePrefix}_happy.svg`;
-
-    // Opdater overskrift i hook
-    hookTitle.innerText = `The streets of NYC from a ${mode}'s perspective...`;
-}
 
 function initScrollama() {
     scroller
         .setup({
             step: ".step",
-            offset: 0.7,
-            debug: false
+            offset: 0.7
         })
         .onStepEnter(response => {
-            response.element.classList.add("is-active");
-            console.log("Enter:", response.index);
+            // Hent position fra data-attributten i HTML
+            const newPos = response.element.getAttribute('data-char-pos');
+            
+            // Fjern alle gamle positioner og tilføj den nye
+            charContainer.className = ''; 
+            charContainer.classList.add(newPos);
         });
-}
 
-window.addEventListener("resize", scroller.resize);
+    // Intersection Observer til at fade sektioner ind/ud
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => observer.observe(section));
+}
