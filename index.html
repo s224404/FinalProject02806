@@ -8,18 +8,18 @@
 </head>
 <body>
 
-    <!-- BAGGRUNDSKORT (Tegner sig selv) -->
-    <div id="map-bg-container">
-        <svg id="nyc-map-svg" viewBox="0 0 100 100">
-            <!-- Her skal din kort-data (paths) ligge. Jeg har lagt en test-streg ind -->
-            <path class="map-line" d="M10,10 L90,10 L90,90 L10,90 Z" />
+    <!-- BAGGRUNDSKORT -->
+    <div id="map-bg">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path class="map-path" d="M0,20 Q50,50 100,20 T100,80 Q50,50 0,80 Z" />
         </svg>
     </div>
 
     <!-- SEKTION 1: INTRO -->
-    <section id="intro" class="fade-section visible">
+    <section id="intro" class="step-section active">
         <h1>NYC Traffic Collisions</h1>
         <p class="subtitle">A data-driven story about danger and human lives.</p>
+        
         <div id="choice-container">
             <div class="choice" data-perspective="cyclist">
                 <div class="image-stack">
@@ -50,41 +50,37 @@
     </section>
 
     <!-- SEKTION 2: THE HOOK -->
-    <section id="story-hook" class="fade-section hidden">
+    <section id="story-hook" class="step-section hidden">
         <div class="hook-container">
             <h2 id="hook-title">The streets are talking...</h2>
-            <p>Every collision tells a story of a failed design or a human error.</p>
+            <p>Every collision is a data point, but also a human story. Let's dive into the patterns of New York City.</p>
         </div>
     </section>
 
-    <!-- SEKTION 3: SCROLLYTELLING (Nu 2-opdelt) -->
-    <main id="scrolly-container" class="fade-section hidden">
-        
-        <!-- VENSTRE: Plot -->
+    <!-- SEKTION 3: SCROLLYTELLING -->
+    <main id="scrolly-container" class="step-section hidden">
         <div class="sticky-plot">
             <div class="plot-wrapper">
                 <iframe id="plot-frame" src="" frameborder="0"></iframe>
-                <p class="figure-caption">Figure 1: Distribution of collisions.</p>
             </div>
         </div>
 
-        <!-- HØJRE: Tekst -->
         <article class="scroll-text">
-            <div class="step" data-step="1" data-char-pos="pos-right-bottom">
+            <div class="step" data-step="1" data-pos="bottom-right">
                 <h3>The Rush Hour</h3>
-                <p>Traffic peaks, and so does the risk. But notice how it differs between boroughs.</p>
+                <p>When the city wakes up, the risk rises. But it's not just about the volume of cars.</p>
             </div>
-            <div class="step" data-step="2" data-char-pos="pos-left-top">
-                <h3>Nighttime Hazards</h3>
-                <p>Visibility drops. For motorists, this is where fatigue kicks in.</p>
+            <div class="step" data-step="2" data-pos="top-left">
+                <h3>Night Shift</h3>
+                <p>As visibility drops, the nature of collisions changes. Fatigue and speed become key factors.</p>
             </div>
         </article>
-
-        <!-- DEN DYNAMISKE KARAKTER (Flytter sig rundt) -->
-        <div id="dynamic-character" class="pos-initial">
-            <img id="happy-char-img" src="" alt="Guide">
-        </div>
     </main>
+
+    <!-- DEN DYNAMISKE KARAKTER -->
+    <div id="fixed-character" class="hidden">
+        <img id="happy-char-img" src="">
+    </div>
 
     <script src="https://unpkg.com/scrollama"></script>
     <script src="script.js"></script>

@@ -1,53 +1,54 @@
 const scroller = scrollama();
-const choices = document.querySelectorAll('.choice');
-const sections = document.querySelectorAll('.fade-section');
-const charContainer = document.getElementById('dynamic-character');
+const charDiv = document.getElementById('fixed-character');
+const happyImg = document.getElementById('happy-char-img');
 
-choices.forEach(choice => {
+// 1. KLIK PÅ FIGUR
+document.querySelectorAll('.choice').forEach(choice => {
     choice.addEventListener('click', () => {
         const mode = choice.getAttribute('data-perspective');
         
-        // 1. Gør karakteren klar
-        let filePrefix = mode === "motorist" ? "driver" : mode;
-        document.getElementById('happy-char-img').src = `${filePrefix}_happy.svg`;
-        
-        // 2. Vis næste sektioner og start fade
+        // Visuel feedback
+        document.querySelectorAll('.choice').forEach(c => c.classList.add('fade-out'));
+        choice.classList.remove('fade-out');
+
+        // Gør indhold klar
         document.getElementById('story-hook').classList.remove('hidden');
         document.getElementById('scrolly-container').classList.remove('hidden');
+        document.getElementById('fixed-character').classList.remove('hidden');
         document.getElementById('scroll-prompt').classList.remove('hidden');
-        
-        // 3. Setup Plotly
+
+        // Map motorist -> driver filer
+        const fileBase = mode === 'motorist' ? 'driver' : mode;
+        happyImg.src = `${fileBase}_happy.svg`;
         document.getElementById('plot-frame').src = `${mode}_hourly_plot.html`;
 
         initScrollama();
+        setupFading();
     });
 });
 
-function initScrollama() {
-    scroller
-        .setup({
-            step: ".step",
-            offset: 0.7
-        })
-        .onStepEnter(response => {
-            // Hent position fra data-attributten i HTML
-            const newPos = response.element.getAttribute('data-char-pos');
-            
-            // Fjern alle gamle positioner og tilføj den nye
-            charContainer.className = ''; 
-            charContainer.classList.add(newPos);
-        });
-
-    // Intersection Observer til at fade sektioner ind/ud
+// 2. FADE LOGIK
+function setupFading() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if(entry.isIntersecting) {
-                entry.target.classList.add('visible');
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
             } else {
-                entry.target.classList.remove('visible');
+                entry.target.classList.remove('active');
             }
         });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.4 });
 
-    sections.forEach(section => observer.observe(section));
+    document.querySelectorAll('.step-section').forEach(section => observer.observe(section));
+}
+
+// 3. KARAKTER HOP
+function initScrollama() {
+    scroller
+        .setup({ step: ".step", offset: 0.6 })
+        .onStepEnter(response => {
+            const pos = response.element.getAttribute('data-pos');
+            charDiv.className = ''; // Reset position
+            charDiv.classList.add(pos);
+        });
 }
